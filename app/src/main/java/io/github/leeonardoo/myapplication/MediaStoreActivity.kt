@@ -1,8 +1,10 @@
 package io.github.leeonardoo.myapplication
 
 import android.content.ContentValues
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,6 +14,9 @@ import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okio.buffer
+import okio.sink
+import okio.source
 import java.io.File
 import java.io.FileInputStream
 
@@ -37,7 +42,15 @@ class MediaStoreActivity : AppCompatActivity() {
             }
         }
 
+    private val fileLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri ?: return@registerForActivityResult
+
+            copyFile(uri)
+        }
+
     private val recordVideo by lazy { findViewById<MaterialButton>(R.id.recordVideo) }
+    private val chooseFile by lazy { findViewById<MaterialButton>(R.id.chooseFile) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +70,9 @@ class MediaStoreActivity : AppCompatActivity() {
             videoLauncher.launch(uri)
         }
 
+        chooseFile.setOnClickListener {
+            fileLauncher.launch("*/*")
+        }
     }
 
     private fun saveFileIntoGallery() {
@@ -69,7 +85,10 @@ class MediaStoreActivity : AppCompatActivity() {
                 put(MediaStore.Video.Media.IS_PENDING, 1)
             }
 
-            val uri = contentResolver.insert(videoCollection, videoValues) //caminho pra um arquivo que ainda não existe
+            val uri = contentResolver.insert(
+                videoCollection,
+                videoValues
+            ) //caminho pra um arquivo que ainda não existe
 
             contentResolver.openOutputStream(uri!!)?.use { outputStream ->
                 FileInputStream(videoFile).use { fileInputStream ->
@@ -105,4 +124,7 @@ class MediaStoreActivity : AppCompatActivity() {
         }
     }
 
+    private fun copyFile(uri: Uri) {
+
+    }
 }

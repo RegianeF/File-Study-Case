@@ -42,7 +42,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
-    implementation("com.squareup.okio:okio:3.3.0")
+    implementation("com.squareup.okio:okio:3.4.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
