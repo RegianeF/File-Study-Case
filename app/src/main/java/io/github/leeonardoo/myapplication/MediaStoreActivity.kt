@@ -19,6 +19,7 @@ import okio.sink
 import okio.source
 import java.io.File
 import java.io.FileInputStream
+import java.io.InputStream
 
 class MediaStoreActivity : AppCompatActivity() {
 
@@ -125,6 +126,67 @@ class MediaStoreActivity : AppCompatActivity() {
     }
 
     private fun copyFile(uri: Uri) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val fileCollection =
+                MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
 
+            val name = contentResolver.query(uri, null, null, null)?.use { cursor ->
+                if (cursor.moveToNext()) {
+                    val index = cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)
+                    cursor.getString(index)
+                } else {
+                    null
+                }
+            }
+
+            val fileValues = ContentValues().apply {
+                put(MediaStore.Downloads.IS_PENDING, 1)
+                put(MediaStore.Downloads.DISPLAY_NAME, name)
+            }
+
+            val emptyUri = contentResolver.insert(
+                fileCollection,
+                fileValues
+            )
+
+            /*        contentResolver.openOutputStream(emptyUri ?: Uri.EMPTY)?.use { outputStream ->
+                        contentResolver.openInputStream(uri)?.use { uriInputStream ->
+                            val buffer = ByteArray(8192)
+
+                            while (true) {
+                                val bytesRead = uriInputStream.read(buffer)
+
+                                if (bytesRead == -1) {
+                                    break
+                                }
+
+                                outputStream.write(buffer, 0, bytesRead)
+                            }
+                        }
+                    }*/
+
+            contentResolver.openOutputStream(emptyUri ?: Uri.EMPTY)?.use { outputStream ->
+                outputStream.sink().buffer().use { sink ->
+                    contentResolver.openInputStream(uri)?.use { inputStream ->
+                        inputStream.source().buffer().use { source ->
+                            sink.writeAll(source)
+                        }
+                    }
+                }
+            }
+
+            fileValues.clear()
+            fileValues.put(MediaStore.Downloads.IS_PENDING, 0)
+
+            contentResolver.update(
+                emptyUri!!,
+                fileValues,
+                null,
+                null
+            )
+
+        }
     }
 }
+
+//escolher um arquivo e copiar pra download com o nome correto
