@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "io.github.leeonardoo.myapplication"
+    namespace = "io.github.regianef.filestudycase"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "io.github.leeonardoo.myapplication"
+        applicationId = "io.github.regianef.filestudycase"
         minSdk = 29
         targetSdk = 33
         versionCode = 1

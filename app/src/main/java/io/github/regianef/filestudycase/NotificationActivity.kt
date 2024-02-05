@@ -1,4 +1,4 @@
-package io.github.leeonardoo.myapplication
+package io.github.regianef.filestudycase
 
 import android.Manifest
 import android.app.NotificationChannel

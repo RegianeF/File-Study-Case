@@ -43,7 +43,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="io.github.leeonardoo.myapplication.fileprovider"
+            android:authorities="io.github.regianef.filestudycase.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

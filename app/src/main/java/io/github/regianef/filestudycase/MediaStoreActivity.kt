@@ -1,4 +1,4 @@
-package io.github.leeonardoo.myapplication
+package io.github.regianef.filestudycase
 
 import android.content.ContentValues
 import android.net.Uri
@@ -19,7 +19,6 @@ import okio.sink
 import okio.source
 import java.io.File
 import java.io.FileInputStream
-import java.io.InputStream
 
 class MediaStoreActivity : AppCompatActivity() {
 
@@ -64,7 +63,7 @@ class MediaStoreActivity : AppCompatActivity() {
 
             val uri = FileProvider.getUriForFile(
                 this,
-                "io.github.leeonardoo.myapplication.fileprovider",
+                "io.github.regianef.filestudycase.fileprovider",
                 videoFile!!
             )
 

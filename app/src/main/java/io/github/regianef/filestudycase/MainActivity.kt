@@ -1,4 +1,4 @@
-package io.github.leeonardoo.myapplication
+package io.github.regianef.filestudycase
 
 import android.content.Intent
 import android.os.Build
